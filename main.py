@@ -43,12 +43,13 @@ Base.metadata.create_all(bind=MEU_BANCO)
 # Salvar no banco de dados.
 system("cls || clear")
 
+# # Create
 print("Solicitando dados para o usuário")
-usuario = Usuario(nome="Marta", email="marta@gmail.com", senha="123")
-session.add(usuario)
-session.commit()
+inserir_nome = input("Digite seu nome: ")
+inserir_email = input("Digite seu e-mail: ")
+inserir_senha = input("Digite sua senha: ")
 
-usuario = Usuario(nome="Maria", email="maria@gmail.com", senha="456")
+usuario = Usuario(nome=inserir_nome, email=inserir_email, senha=inserir_senha)
 session.add(usuario)
 session.commit() 
 
@@ -56,8 +57,39 @@ session.commit()
 print("\nExibindo todos os usuários do banco de dados.")
 lista_usuarios = session.query(Usuario).all()
 
+# Read
 for usuario in lista_usuarios:
-    print(f"{usuario.id} - {usuario.nome} - {usuario.senha}")
+    print(f"{usuario.id} - {usuario.nome} - {usuario.email} - {usuario.senha}")
+
+# Delete
+print("\nExcluindo um usuário:")
+email_usuario = input("Infome o email do usuário para ser excluído: ")
+usuario = session.query(Usuario).filter_by(email = email_usuario).first()
+session.delete(usuario)
+session.commit()
+print("Usuário excluído com sucesso.")
+
+# Listando todos os usuários do banco de dados.
+print("\nExibindo todos os usuários do banco de dados.")
+lista_usuarios = session.query(Usuario).all()
+
+# Read
+for usuario in lista_usuarios:
+    print(f"{usuario.id} - {usuario.nome} - {usuario.email} - {usuario.senha}")
+
+# Update
+print("\nAtualizando dados do usuário.")
+usuario = session.query(Usuario).filter_by(email = email_usuario).first()
+
+novos_dados = Usuario(
+    nome = input("Digite seu nome: "),
+    email = input("Digite seu e-mail: "),
+    senha = input("Digite sua senha: ")
+)
+
+usuario = novos_dados
+session.add(usuario)
+session.commit()
 
 # Fechando conexão com o banco de dados.
 session.close()
